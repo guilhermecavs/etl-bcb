@@ -6,7 +6,7 @@ from datetime import datetime,timedelta
 SERIES = {
 "selic": 11,
 "cambio_usd":1,
-"ipca":433,
+"ipca":13522,
 
 }
 # URL base da API 
@@ -23,5 +23,7 @@ def buscar_serie(nome,codigo,data_inicio,data_fim):
          # Faz a requisição HTTP para a API do Banco Central
     response = requests.get(url,params= params ,timeout=15)
     dados = response.json()
+    if isinstance(dados, dict) and "erro" in dados:
+        raise ValueError(f"API BCB erro para série '{nome}' (código {codigo}): {dados}")
     # Converte o JSON retornado para um DataFrame do pandas
     return pd.DataFrame(dados)
